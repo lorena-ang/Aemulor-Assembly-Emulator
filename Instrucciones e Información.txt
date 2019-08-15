@@ -1,0 +1,197 @@
+Organización Computacional
+Aemulor: Emulador de Ensamblador
+
+
+Aemulor es un emulador de ensamblador, un lenguaje que consta de instrucciones y pseudoinstrucciones que son traducidas en lenguaje maquinal. Para crear este emulador fue necesaria la creación de un programa escrito en un lenguaje de alto nivel, como lo es C++ y JavaScript. Después se prosiguió a realizar una interfaz gráfica para su uso, la cual fue realizada con HTML. La forma en que este programa funciona es que recibe como dato de entrada un conjunto de instrucciones, algunas con tipo de direccionamiento y dirección numérica.
+
+Las instrucciones y direccionamiento permitidos se mencionarán a continuación:
+
+Instrucción - Descripción - Direccionamientos permitidos
+LDA - Carga un dato en el acumulador - Absoluto, Inmediato, Relativo, Indirecto
+STA - Guarda en memoria el contenido del acumulador - Absoluto, Relativo, Indirecto
+CLA - Carga con ceros el acumulador - Innecesario
+NOP - No operación - Innecesario
+HLT - Alto - Innecesario
+ADD - Suma un dato al acumulador - Absoluto, Inmediato, Relativo, Indirecto
+SUB - Resta un dato al acumulador - Absoluto, Inmediato, Relativo, Indirecto
+NEG - Cambia el signo del acumulador - Innecesario
+JMP - Salta a una dirección de memoria - Absoluto, Relativo, Indirecto
+JMN - Salta si el acumulador es negativo - Absoluto, Relativo, Indirecto
+JMZ - Salta si el acumulador es cero - Absoluto, Relativo, Indirecto
+JMV - Salta si hay desborde - Absoluto, Relativo, Indirecto
+
+Al recibir los datos de entrada el programa comienza a calcular y desplegar los valores de cada registro del CPU (PC, IR, MDR, MAR, FR y AC) después de cada ciclo FETCH y EXECUTE realizado para cada instrucción. Al finalizar, en la pantalla se muestran las direcciones de memoria involucradas, así como el valor del dato contenido en ellas. Para realizar cada ciclo, se realizan ciertas micro-operaciones que serán explicadas en breve. 
+
+
+Instructivo
+
+Para facilitar la usabilidad y mejorar la experiencia del usuario, Aemulor fue realizado con una interfaz gráfica y puede ser utilizado a través de su respectiva página web, a la cual es posible acceder con el link: https://aemulor-assembly-emulator.firebaseapp.com/. 
+
+Para la escritura de instrucciones se debe considerar:
++ Las instrucciones válidas y sus direccionamientos se muestran previamente en la tabla.
++ Cada instrucción debe estar escrita en su propia línea y en mayúsculas
++ Para los direccionamientos: absoluto = A, relativo = R, inmediato = I e indirecto = D.
++ Si la instrucción no requiere de direccionamiento, se deben escribir solo esas tres letras (ej. CLA). Si no se deben escribir las tres letras seguidas de un espacio, después la letra del direccionamiento seguido de una coma y un espacio, y finalmente se debe poner el número deseado de 3 bits (ej. STA A, 001).
+
+Para utilizar este programa, lo único que se debe hacer es:
+1.	Entrar al link donde se encuentra el programa.
+2.	En la ventana que aparece al entrar a la página, se debe escribir la instrucción ORG con la dirección deseada.
+3.	En la ventana de CÓDIGO, ingresar todas las instrucciones que se desee probar y dar click en Execute. 
+4.	Y eso es todo. Los resultados de los ciclos FETCH y EXECUTE se podrán ver en un recuadro enseguida, al cual se le puede hacer scroll para facilidad del usuario. Los espacios de memoria usados también se muestran en la parte de abajo, con su dirección y dato.
+
+
+Creación del Programa
+
+Micro-operaciones
+
+Considerando que la función de Aemulor es el despliegue de los ciclos FETCH y EXECUTE, es importante considerar la importancia de las micro-operaciones para la planeación de este programa. A continuación se muestran todas las micro-operaciones que se utilizaron, siendo estas las principales al momento de ejecutar los cambios en los registros y de calcular los valores a desplegar.
+
+Ciclo FETCH
+[MAR] ← [PC]
+MMRead
+[PC] ← [PC] + 1
+[IR] ← [MDR]
+
+Ciclo EXECUTE
+
+1. LDA:
+     a.	Absoluto
+          [MAR] ← [IR]2-0
+          MMRead
+          [AC] ← [MDR]
+     b.	Inmediato
+          [AC]5 ← [IR]2
+          [AC]4-2 ← 000
+          [AC]1-0 ← [IR]1-0
+     c.	Relativo
+          [MAR] ← [PC] + [IR]2-0
+          MMRead
+          [AC] ← [MDR]
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [AC] ← [MDR]
+2.	STA
+     a.	Absoluto
+          [MAR] ← [IR]2-0
+          [MDR] ← [AC]
+          MMWrite
+     b.	Inmediato
+     No es posible
+     c.	Relativo
+          [MAR] ← [PC] + [IR]2-0
+          [MDR] ← AC
+          MMWrite
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]2-0
+          [MDR] ← [AC]
+          MMWrite
+3.	ADD
+     a.	Absoluto
+          [MAR] <- [IR]2-0
+          MMRead
+          [AC] ← [AC] + [MDR]
+     b.	Inmediato
+          [AC] ← [AC] + [IR]2-0
+     c.	Relativo
+          [MAR] ← [PC] + [IR]2-0
+          MMRead
+          [AC] ← [AC] + [MDR]
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [AC] ← [AC] + [MDR]
+4.	SUB
+     a.	Absoluto
+          [MAR] <- [IR]2-0
+          MMRead
+          [AC] ← [AC] - [MDR]
+     b.	Inmediato
+          [AC] ← [AC] - [IR]2-0
+     c.	Relativo
+          [MAR] ← [PC] + [IR]2-0
+          MMRead
+          [AC] ← [AC] - [MDR]
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [AC] ← [AC] - [MDR]
+5.	NEG
+     No utiliza ningún direccionamiento
+     [AC] ← -[AC]
+6.	CLA
+     No utiliza ningún direccionamiento
+     [AC] ← 000000
+7.	NOP
+     No realiza ninguna micro-operación
+8.	HLT
+	No realiza ninguna micro-operación
+9.	JMP
+     a.	Absoluto
+          [PC] ← [IR]2-0
+     b.	Inmediato
+          No es posible
+     c.	Relativo
+          [PC] ← [PC] + [IR]2-0
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [PC] ←  [MDR]
+10.	JMZ (solo si AC = 0)
+     a.	Absoluto
+          [PC] ← [IR]2-0
+     b.	Inmediato
+          No es posible
+     c.	Relativo
+          [PC] ← [PC] + [IR]2-0
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [PC] ←  [MDR]
+11.	JMN (solo si AC es negativo)
+     a.	Absoluto
+          [PC] ← [IR]2-0
+     b.	Inmediato
+          No es posible
+     c.	Relativo
+          [PC] ← [PC] + [IR]2-0
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+     MMRead
+          [MAR] ← [MDR]
+     MMRead
+          [PC] ←  [MDR]
+12.	JMZ (solo si existe overflow)
+     a.	Absoluto
+          [PC] ← [IR]2-0
+     b.	Inmediato
+          No es posible
+     c.	Relativo
+          [PC] ← [PC] + [IR]2-0
+     d.	Indirecto
+          [MAR] ← [IR]2-0
+          MMRead
+          [MAR] ← [MDR]
+          MMRead
+          [PC] ←  [MDR]
+
+
+Desarrollo del programa
+
++ Análisis de lo requerido para comenzar con el diseño y desarrollo del programa
++ Comienza con el proceso de calcular y desplegar valores de FETCH a través de la creación de un ciclo que sirve para navegar a través de las líneas de instrucciones. Después se muestran algunas variables esenciales para proseguir con el ciclo EXECUTE.
++ Comienza el ciclo EXECUTE utilizando las microo-operaciones para actualizar el valor de las variables, las cuales serán posteriormente desplegadas. En caso de que éstas 4 instrucciones sean de más de 3 caracteres se desplegará un mensaje de error.
++ Utilizando switch cases proseguir con las micro-operaciones de estas instrucciones, las cuales necesitan de la obtención del número de cada instrucción, por lo que anteriormente se hace una llamada a una función que obtiene este número. Si se escoge un valor no permitido se muestra un mensaje de error. En la parte de abajo se muestra la forma en que se actualiza el FR según el valor del acumulador.
++ Lo que hace esta función es que itera a través de todo el arreglo que contiene los datos de memoria y si encuentra algún dato que sí cambió según lo ingresado por el usuario, lo despliega.
