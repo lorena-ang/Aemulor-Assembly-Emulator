@@ -1,0 +1,2 @@
+# Aemulor-Assembly-Emulator
+ Aemulor es un emulador de ensamblador, un lenguaje que consta de instrucciones y pseudoinstrucciones que son traducidas en lenguaje maquinal. Para crear este emulador fue necesaria la creación de un programa escrito en un lenguaje de alto nivel, como lo es C++ y JavaScript. Después se prosiguió a realizar una interfaz gráfica para su uso, la cual fue realizada con HTML. La forma en que este programa funciona es que recibe como dato de entrada un conjunto de instrucciones, algunas con tipo de direccionamiento y dirección numérica.
