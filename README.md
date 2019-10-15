@@ -1,3 +1,6 @@
 # Aemulor-Assembly-Emulator
+Aemulor is an Assembly emulator, a language that consists of instructions and pseudo-instructions that are translated into machine language. To create this emulator it was necessary to create a program written in a high-level language, such as C ++ and JavaScript. Then for easier visualization and use, a graphical interface was created, which was done using HTML. The way this program works is that it receives a set of instructions as input, some of these with address type and a numerical address.
+Program's web page: https://aemulor-assembly-emulator.firebaseapp.com/
+
 Aemulor es un emulador de ensamblador, un lenguaje que consta de instrucciones y pseudoinstrucciones que son traducidas en lenguaje maquinal. Para crear este emulador fue necesaria la creación de un programa escrito en un lenguaje de alto nivel, como lo es C++ y JavaScript. Después se prosiguió a realizar una interfaz gráfica para su uso, la cual fue realizada con HTML. La forma en que este programa funciona es que recibe como dato de entrada un conjunto de instrucciones, algunas con tipo de direccionamiento y dirección numérica.
 Página web de programa: https://aemulor-assembly-emulator.firebaseapp.com/
